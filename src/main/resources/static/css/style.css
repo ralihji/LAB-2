@@ -1,0 +1,184 @@
+/* ============================================================
+   Calculatrice SEG3502 - Lab 2 (Spring MVC + Thymeleaf)
+   Même design que la calculatrice Angular du Lab 1.
+   Servi par Spring Boot depuis /css/style.css
+   ============================================================ */
+
+/* Styles globaux : s'appliquent à toute la page */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: 24px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #d9dee3;
+  color: #1b2229;
+  font-family: 'Barlow', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ===== Le boîtier de la calculatrice ===== */
+.calculatrice {
+  width: min(360px, 100%);
+  padding: 20px 22px 26px;
+  background: #2e3842;
+  border-radius: 28px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 1px 2px rgba(20, 28, 36, 0.3),
+    0 20px 40px -14px rgba(20, 28, 36, 0.5);
+  color: #d7dde2;
+}
+
+/* Le petit nom imprimé en haut du boîtier */
+.modele {
+  margin: 0 0 12px 4px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: #97a3ae;
+}
+
+/* ===== L'écran (style écran LCD) ===== */
+.ecran {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  min-height: 112px;
+  padding: 10px 14px 12px;
+  background: #b9c4a7;
+  border: 5px solid #1f272e;
+  border-radius: 12px;
+  box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.22);
+  color: #1e2619;
+}
+
+.ecran-etiquette {
+  align-self: flex-start;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #4a5741;
+}
+
+.ecran-valeur {
+  margin-top: auto;
+  max-width: 100%;
+  font-family: 'Share Tech Mono', ui-monospace, Consolas, monospace;
+  font-size: 2.6rem;
+  line-height: 1.1;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.ecran-message {
+  font-size: 0.8125rem;
+  color: #3b4632;
+}
+
+/* ===== Les deux champs de saisie ===== */
+.champs {
+  display: grid;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.champ {
+  display: grid;
+  grid-template-columns: 1fr 136px;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.champ input {
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 8px;
+  background: #eef1f3;
+  box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.18);
+  color: #1b2229;
+  font-family: 'Share Tech Mono', ui-monospace, Consolas, monospace;
+  font-size: 1.25rem;
+  text-align: right;
+}
+
+.champ input::placeholder {
+  color: #9aa3ac;
+}
+
+/* Cache les petites flèches haut/bas des champs "number" */
+.champ input::-webkit-outer-spin-button,
+.champ input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.champ input {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* ===== Les touches d'opération ===== */
+.touches {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.touche {
+  aspect-ratio: 1;
+  border: 0;
+  border-radius: 14px;
+  background: #e6e9ec;
+  color: #1b2229;
+  font-family: inherit;
+  font-size: 1.9rem;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow:
+    0 4px 0 #8f99a3,
+    0 6px 10px rgba(0, 0, 0, 0.25);
+  transition: transform 80ms ease-out, box-shadow 80ms ease-out, background-color 120ms;
+}
+
+.touche:hover {
+  background: #f4f6f8;
+}
+
+/* Effet "touche enfoncée" quand on clique */
+.touche:active {
+  transform: translateY(3px);
+  box-shadow:
+    0 1px 0 #8f99a3,
+    0 2px 4px rgba(0, 0, 0, 0.25);
+}
+
+/* ===== Contour visible quand on navigue au clavier (Tab) ===== */
+.champ input:focus-visible,
+.touche:focus-visible {
+  outline: 3px solid #e9a23b;
+  outline-offset: 3px;
+}
+
+/* Respecte les utilisateurs qui désactivent les animations */
+@media (prefers-reduced-motion: reduce) {
+  .touche {
+    transition: none;
+  }
+}
+
+/* Le formulaire ne doit pas ajouter d'espace autour des champs */
+.calculatrice form {
+  margin: 0;
+}

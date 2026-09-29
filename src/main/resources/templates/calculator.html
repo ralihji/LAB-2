@@ -2,85 +2,55 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Calculatrice</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            font-size: 1.1rem;
-            padding: 30px;
-        }
-        .field {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 18px;
-            width: 300px;
-        }
-        .field label {
-            flex: 1;
-        }
-        .field input {
-            width: 60px;
-            height: 28px;
-            border: 1px solid #7a9cc6;
-            border-radius: 2px;
-            padding: 2px 6px;
-            font-size: 1rem;
-        }
-        .field input[readonly] {
-            background: #fff;
-        }
-        .ops {
-            display: flex;
-            gap: 20px;
-            margin-top: 10px;
-        }
-        .ops button {
-            width: 40px;
-            height: 40px;
-            background: #b9bec6;
-            border: 1px solid #6e7581;
-            border-radius: 6px;
-            font-size: 1.1rem;
-            cursor: pointer;
-        }
-        .ops button:hover { filter: brightness(0.95); }
-        .ops button:active { filter: brightness(0.85); }
-        .erreur {
-            color: #b00020;
-            margin-top: 10px;
-        }
-    </style>
+    <!-- Polices Google : Barlow pour le texte, Share Tech Mono pour les chiffres de l'écran -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500&family=Share+Tech+Mono&display=swap"
+          rel="stylesheet">
+    <!-- Feuille de style servie depuis src/main/resources/static/css/style.css -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 
-<form th:action="@{/calculer}" th:object="${calculatorForm}" method="post">
+<main class="calculatrice">
+    <p class="modele">Calculatrice</p>
 
-    <div class="field">
-        <label for="premierNombre">Premier nombre:</label>
-        <input type="number" step="any" id="premierNombre" th:field="*{premierNombre}">
-    </div>
+    <!-- L'écran : affiche le texte préparé par le contrôleur (attribut "affichage" du Model) -->
+    <section class="ecran" aria-label="Écran de la calculatrice">
+        <span class="ecran-etiquette">Résultat</span>
+        <output class="ecran-valeur" id="resultat" aria-live="polite" th:text="${affichage}">0</output>
+        <span class="ecran-message"
+              th:if="${calculatorForm.erreur != null}"
+              th:text="${calculatorForm.erreur}">Message d'erreur</span>
+    </section>
 
-    <div class="field">
-        <label for="secondNombre">Second nombre:</label>
-        <input type="number" step="any" id="secondNombre" th:field="*{secondNombre}">
-    </div>
+    <!-- Le formulaire est envoyé au serveur (POST /calculer) : le calcul se fait en Kotlin, pas en JavaScript -->
+    <form th:action="@{/calculer}" th:object="${calculatorForm}" method="post">
 
-    <div class="field">
-        <label for="resultat">Resultat:</label>
-        <input type="text" id="resultat" th:value="${calculatorForm.resultat}" readonly>
-    </div>
+        <!-- Les deux nombres : th:field les relie aux propriétés de CalculatorForm -->
+        <div class="champs">
+            <label class="champ" for="premierNombre">
+                <span>Premier nombre</span>
+                <input type="text" inputmode="decimal" autocomplete="off" placeholder="0" th:field="*{premierNombre}">
+            </label>
 
-    <div class="ops">
-        <button type="submit" name="operation" value="+">+</button>
-        <button type="submit" name="operation" value="-">-</button>
-        <button type="submit" name="operation" value="*">*</button>
-        <button type="submit" name="operation" value="/">/</button>
-    </div>
+            <label class="champ" for="secondNombre">
+                <span>Second nombre</span>
+                <input type="text" inputmode="decimal" autocomplete="off" placeholder="0" th:field="*{secondNombre}">
+            </label>
+        </div>
 
-    <p class="erreur" th:if="${calculatorForm.erreur != null}" th:text="${calculatorForm.erreur}"></p>
-
-</form>
+        <!-- Les touches : chaque bouton envoie sa propre valeur dans le paramètre "operation" -->
+        <div class="touches">
+            <button type="submit" class="touche" name="operation" value="+" aria-label="Additionner">+</button>
+            <button type="submit" class="touche" name="operation" value="-" aria-label="Soustraire">&minus;</button>
+            <button type="submit" class="touche" name="operation" value="*" aria-label="Multiplier">&times;</button>
+            <button type="submit" class="touche" name="operation" value="/" aria-label="Diviser">&divide;</button>
+        </div>
+    </form>
+</main>
 
 </body>
 </html>
